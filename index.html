@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lerp Variants</title>
+    <link rel="stylesheet" href="settings-menu.css">
+    <link rel="stylesheet" href="circle.css">
+    <link rel="icon" type="image/png" href="favicon.png">
+</head>
+
+<body>
+    <div class="circle" id="circle"></div>
+
+    <div class="settings-container">
+        <div class="settings-section">
+            <div class="settings-header">
+                <header class="settings-title">Settings</header>
+            </div>
+        </div>
+        <div class="settings-content">
+            <div class="settings-item select-item">
+                <div class="settings-item-name">Select Function</div>
+                <div class="settings-item-control">
+                    <select title="select" class="settings-select" id="current-function">
+                        <option value="positionSetter">positionSetter</option>
+                        <option value="staticVelocity">staticVelocity</option>
+                        <option value="distanceVelocity">distanceVelocity</option>
+                        <option value="proximityVelocity">proximityVelocity</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="baseVelocity-slider" class="settings-item slider-item is-hidden">
+                <div class="settings-item-name">Base velocity - 300</div>
+                <div class="settings-item-control">
+                    <input title="(px per second)" class="slider" type="range" min="0" max="600" step="1">
+                </div>
+            </div>
+            <div id="referenceDistance-slider" class="settings-item slider-item is-hidden">
+                <div class="settings-item-name">Reference Distance - 300</div>
+                <div class="settings-item-control">
+                    <input title="(px per second)" class="slider" type="range" min="0" max="600" step="1">
+                </div>
+            </div>
+
+            <div class="settings-button-container">
+                <button class="settings-button">Button</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="lerp.js"></script>
+</body>
+
+</html>
