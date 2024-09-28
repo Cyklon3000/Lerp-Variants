@@ -28,6 +28,7 @@
                         <option value="staticVelocity">staticVelocity</option>
                         <option value="distanceVelocity">distanceVelocity</option>
                         <option value="proximityVelocity">proximityVelocity</option>
+                        <option value="staticAcceleration">staticAcceleration</option>
                     </select>
                 </div>
             </div>
@@ -41,12 +42,24 @@
             <div id="referenceDistance-slider" class="settings-item slider-item is-hidden">
                 <div class="settings-item-name">Reference Distance - 300</div>
                 <div class="settings-item-control">
-                    <input title="(px per second)" class="slider" type="range" min="0" max="600" step="1">
+                    <input title="(px)" class="slider" type="range" min="0" max="600" step="1">
+                </div>
+            </div>
+            <div id="baseAcceleration-slider" class="settings-item slider-item is-hidden">
+                <div class="settings-item-name">Base acceleration - 50</div>
+                <div class="settings-item-control">
+                    <input title="(px per second per second)" class="slider" type="range" min="0" max="100" step="0.5">
+                </div>
+            </div>
+            <div id="dragCoefficient-slider" class="settings-item slider-item is-hidden">
+                <div class="settings-item-name">Drag coefficient - 0.5</div>
+                <div class="settings-item-control">
+                    <input title="(velocity multiplier per second)" class="slider" type="range" min="0" max="1" step="0.01">
                 </div>
             </div>
 
             <div class="settings-button-container">
-                <button class="settings-button">Button</button>
+                <button class="settings-button" id="reset">Reset Simulation</button>
             </div>
         </div>
     </div>

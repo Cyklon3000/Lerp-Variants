@@ -48,33 +48,47 @@ for (const slider of variableSliders) {
     slider.label = slider.parentElement.parentElement.children[0];
 }
 
+const resetButton = document.getElementById('reset');
+resetButton.addEventListener('click', resetSimulation);
+
 let positionFunction = positionSetter;
 
 let deltaTime = 0;
 let lastTimestamp = Date.now();
 
+let inertia = new Vector2(0, 0);
+
 // Variable to be set by the user
 let baseVelocity = 300;
 let referenceDistance = 300;
+let baseAcceleration = 50;
+let dragCoefficient = 0.5;
 
 function updateFunction() {
     switch (currentFunctionSelection.value) {
         case 'positionSetter':
             positionFunction = positionSetter;
-            setSliderVisibility(['baseVelocity', 'referenceDistance'], false);
+            setSliderVisibility(['baseVelocity', 'referenceDistance', 'baseAcceleration', 'dragCoefficient'], false);
             break;
         case 'staticVelocity':
             positionFunction = staticVelocity;
             setSliderVisibility(['baseVelocity'], true);
-            setSliderVisibility(['referenceDistance'], false);
+            setSliderVisibility(['referenceDistance', 'baseAcceleration', 'dragCoefficient'], false);
             break;
         case 'distanceVelocity':
             positionFunction = distanceVelocity;
             setSliderVisibility(['baseVelocity', 'referenceDistance'], true);
+            setSliderVisibility(['baseAcceleration', 'dragCoefficient'], false);
             break;
         case 'proximityVelocity':
             positionFunction = proximityVelocity;
             setSliderVisibility(['baseVelocity', 'referenceDistance'], true);
+            setSliderVisibility(['baseAcceleration', 'dragCoefficient'], false);
+            break;
+        case 'staticAcceleration':
+            positionFunction = staticAcceleration;
+            setSliderVisibility(['baseAcceleration', 'dragCoefficient'], true);
+            setSliderVisibility(['baseVelocity', 'referenceDistance'], false);
             break;
     }
 }
@@ -87,6 +101,12 @@ function updateVariable() {
             break;
         case 'referenceDistance':
             referenceDistance = this.value;
+            break;
+        case 'baseAcceleration':
+            baseAcceleration = this.value;
+            break;
+        case 'dragCoefficient':
+            dragCoefficient = this.value;
             break;
     }
 }
@@ -101,6 +121,13 @@ function setSliderVisibility(sliderNames, isVisible) {
             settingsContainer.classList.remove('is-hidden');
         }
     }
+}
+
+function resetSimulation() {
+    current = new Vector2(window.innerWidth / 2, window.innerHeight / 2);
+    target = new Vector2(window.innerWidth / 2, window.innerHeight / 2);
+    inertia = new Vector2(0, 0);
+    positionFunction();
 }
 
 // Update the circle position based on the vector2 values
@@ -160,6 +187,29 @@ function proximityVelocity() {
 
     let directionNormalized = directionRaw.normalize();
     let newPosition = current.add(directionNormalized.multiply(velocity));
+
+    updateCirclePlacement(newPosition);
+}
+
+function staticAcceleration() {
+    let directionRaw = target.add(current.multiply(-1));
+    let directionNormalized = directionRaw.normalize();
+    let force = directionNormalized.multiply(baseAcceleration * deltaTime);
+    if (isNaN(inertia.x)) {
+        return;
+    }
+    inertia = inertia.add(force);
+    inertia = inertia.multiply((1 - dragCoefficient) ** deltaTime);
+
+    if (directionRaw.magnitude() < 20) {
+        inertia = inertia.multiply((1 - 0.99) ** deltaTime);
+        if (inertia.magnitude() < 0.1) {
+            updateCirclePlacement(target);
+            return;
+        }
+    }
+
+    let newPosition = current.add(inertia);
 
     updateCirclePlacement(newPosition);
 }
